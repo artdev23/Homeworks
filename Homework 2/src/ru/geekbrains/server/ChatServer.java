@@ -34,16 +34,35 @@ public class ChatServer
   }
 
 
-  public static void main(String[] args)
+  public void close()
   {
 	try
 	{
-	  ChatServer chatServer = new ChatServer();
+	  sock.close();
+	  manager.close();
+	}
+	catch (IOException e)
+	{
+	  e.printStackTrace();
+	}
+  }
+
+
+  public static void main(String[] args)
+  throws IOException
+  {
+	ChatServer chatServer = new ChatServer();
+	try
+	{
 	  chatServer.start();
 	}
 	catch (IOException e)
 	{
 	  e.printStackTrace();
+	}
+	finally
+	{
+	  chatServer.close();
 	}
   }
 

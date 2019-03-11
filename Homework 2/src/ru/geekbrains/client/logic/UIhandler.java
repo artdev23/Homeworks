@@ -8,6 +8,9 @@ public interface UIhandler
 {
 
   void addMessage(Message msg);
+  void addMessages(List<Message> msgs);
+
+  List<Message> getAllMessages();
 
   void setUserList(List<String> usernames);
 
