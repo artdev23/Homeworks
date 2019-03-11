@@ -5,6 +5,7 @@ import ru.geekbrains.client.App;
 import ru.geekbrains.client.logic.Message;
 import ru.geekbrains.client.logic.NetConnection;
 import ru.geekbrains.client.logic.UIhandler;
+import ru.geekbrains.client.ui.settings.SettingsWindow;
 
 import javax.swing.*;
 import java.awt.*;
@@ -46,6 +47,7 @@ public class MainWindow
   private JMenuItem miSettings;
   private JMenuItem miExit;
   private LoginWindow loginWin;
+  private SettingsWindow settingsWin;
 
   private static Dimension minSize = new Dimension(800, 800);
   private static Dimension inputMinSize = new Dimension(MAX_VALUE, 40);
@@ -79,9 +81,18 @@ public class MainWindow
 	pack();
 	setVisible(true);
 
-	conn = new NetConnection(this);
+//	conn = new NetConnection(this);
+	conn = null;
 
 	loginWin = new LoginWindow(this, conn);
+	settingsWin = new SettingsWindow(this, conn);
+
+//	login();
+  }
+
+
+  private void login()
+  {
 	loginWin.setVisible(true);
 
 	if (!loginWin.isLoginSuccessful())
@@ -114,6 +125,7 @@ public class MainWindow
 	sendMessage.addActionListener(e -> sendMessage());
 	inputMessage.addActionListener(e -> sendMessage());
 
+	miSettings.addActionListener(e -> settingsWin.setVisible(true));
 	miExit.addActionListener(e -> exit(0));
 
 	WindowAdapter adapter = new WindowAdapter()

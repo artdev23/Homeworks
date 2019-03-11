@@ -30,7 +30,7 @@ public class LoginWindow
   private static final String TITLE = "Login";
 
 
-  public LoginWindow(Frame parent, NetConnection connection)
+  public LoginWindow(JFrame parent, NetConnection connection)
   {
 	super(parent, TITLE, true);
 
@@ -83,6 +83,7 @@ public class LoginWindow
 	  tfUsername.requestFocus();
 	  String msg = ex.getMessage();
 	  showMessageDialog(this, msg, TITLE, ERROR_MESSAGE);
+
 	  return;
 	}
 
