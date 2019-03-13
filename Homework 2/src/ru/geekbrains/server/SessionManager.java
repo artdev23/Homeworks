@@ -123,4 +123,10 @@ public class SessionManager
 				   .collect(toList());
   }
 
+
+  public void close()
+  {
+	authService.close();
+  }
+
 }

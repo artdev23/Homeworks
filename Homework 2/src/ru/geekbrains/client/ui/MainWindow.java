@@ -12,11 +12,13 @@ import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
+import java.util.*;
 import java.util.List;
 
 import static java.awt.BorderLayout.*;
 import static java.lang.Integer.MAX_VALUE;
 import static java.lang.System.exit;
+import static java.util.Collections.*;
 import static javax.swing.JOptionPane.*;
 import static javax.swing.SwingUtilities.invokeLater;
 
@@ -228,6 +230,18 @@ public class MainWindow
 
 
   @Override
+  public void addMessages(List<Message> msgs)
+  {
+	invokeLater(() ->
+				{
+				  msgs.forEach(x -> messageListModel.addElement(x));
+				  int lastIndex = messageListModel.size() - 1;
+				  messageList.ensureIndexIsVisible(lastIndex);
+				});
+  }
+
+
+  @Override
   public void setUserList(List<String> usernames)
   {
 	invokeLater(() ->
@@ -235,6 +249,16 @@ public class MainWindow
 				  userListModel.clear();
 				  usernames.forEach(o -> userListModel.addElement(o));
 				});
+  }
+
+
+  @Override
+  public List<Message> getAllMessages()
+  {
+	Enumeration<Message> msg = messageListModel.elements();
+	ArrayList<Message> list = Collections.list(msg);
+
+	return list;
   }
 
 }
