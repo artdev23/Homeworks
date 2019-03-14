@@ -5,6 +5,7 @@ import ru.geekbrains.client.logic.Authorizer.AuthException;
 
 import java.io.*;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.regex.Matcher;
 
 import static java.lang.String.format;
@@ -40,7 +41,7 @@ public class NetConnection
 	}
 	catch (IOException e)
 	{
-	  throw new ServerConnectException(e);
+	  throw new ServerConnectException("Ошибка подключения к серверу", e);
 	}
 
 	auth = new Authorizer(inStream, outStream);
@@ -88,6 +89,10 @@ public class NetConnection
 
 	  }
 	}
+	catch (SocketException e)
+	{
+	  uiHandler.showError(new ServerConnectException("Connection is lost"));
+	}
 	catch (Exception e)
 	{
 	  e.printStackTrace();
@@ -107,7 +112,18 @@ public class NetConnection
   public void login(String user, String pass)
   throws AuthException
   {
-	auth.login(user, pass);
+	try
+	{
+	  auth.login(user, pass);
+	}
+	catch (SocketException e)
+	{
+	  uiHandler.showError(new ServerConnectException("Connection is lost"));
+	}
+	catch (IOException e)
+	{
+	  e.printStackTrace();
+	}
   }
 
 

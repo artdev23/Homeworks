@@ -11,10 +11,14 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.function.Consumer;
 
 import static java.lang.System.out;
 import static java.lang.Thread.currentThread;
 import static java.util.Collections.synchronizedList;
+import static java.util.concurrent.Executors.*;
 import static java.util.stream.Collectors.toList;
 
 
@@ -23,6 +27,7 @@ public class SessionManager
 
   private final List<Session> sessions = synchronizedList(new ArrayList<>());
   private final ServerSocket ssocket;
+  private final ExecutorService threadPool;
   private AuthService authService;
 
 
@@ -32,6 +37,7 @@ public class SessionManager
 	  throw new ServerSocketException("Server socket is closed");
 
 	ssocket = socket;
+	threadPool = newCachedThreadPool();
   }
 
 
@@ -50,7 +56,7 @@ public class SessionManager
   }
 
 
-  private boolean isConnected(User user)
+  public boolean isConnected(User user)
   {
 	return sessions.stream()
 				   .anyMatch(o -> o.getUser().equals(user));
@@ -60,9 +66,6 @@ public class SessionManager
   public void connect(User user, Socket socket)
   throws IOException
   {
-	if (isConnected(user))
-	  return;
-
 	Session session = new Session(this, socket, user);
 	session.start();
 	sessions.add(session);
@@ -127,6 +130,13 @@ public class SessionManager
   public void close()
   {
 	authService.close();
+	threadPool.shutdownNow();
+  }
+
+
+  public void exec(Runnable proc)
+  {
+	threadPool.execute(proc);
   }
 
 }

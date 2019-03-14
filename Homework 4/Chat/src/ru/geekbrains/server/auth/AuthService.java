@@ -82,6 +82,7 @@ public class AuthService
 	  {
 		String authMessage = inStream.readUTF();
 		User user = authUser(authMessage);
+
 		out.printf("Authorization for user %s successful%n", user.getLogin());
 		outUTF(outStream, AUTH_SUCCESSFUL_MESSAGE);
 
@@ -90,14 +91,7 @@ public class AuthService
 	  catch (AuthException e)
 	  {
 		out.println(e.getMessage());
-		try
-		{
-		  outUTF(outStream, AUTH_FAILS_MESSAGE);
-		}
-		catch (IOException e1)
-		{
-		  e1.printStackTrace();
-		}
+		outUTF(outStream, AUTH_FAILS_MESSAGE);
 	  }
 	  catch (SQLException e)
 	  {
@@ -130,7 +124,12 @@ public class AuthService
 	if (!rs.next())
 	  throw new AuthException("Authorization for user " + login + " failed");
 
-	return new User(login);
+	User user = new User(login);
+
+	if (sessionManager.isConnected(user))
+	  throw new AuthException("User " + user.getLogin() + " connected already");
+
+	return user;
   }
 
 
