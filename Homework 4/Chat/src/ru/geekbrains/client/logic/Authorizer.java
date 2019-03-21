@@ -4,6 +4,7 @@ package ru.geekbrains.client.logic;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.net.SocketException;
 
 import static java.lang.String.format;
 import static ru.geekbrains.utils.MessageFormats.*;
@@ -29,10 +30,8 @@ public class Authorizer
 
 
   public void login(String username, String password)
-  throws AuthException
+  throws AuthException, IOException
   {
-	try
-	{
 	  setAuthorized(false);
 
 	  String request = format(AUTH_PATTERN_MESSAGE, username, password);
@@ -52,11 +51,6 @@ public class Authorizer
 	  {
 		throw new AuthException("Incorrect server response: " + response);
 	  }
-	}
-	catch (IOException e)
-	{
-	  throw new RuntimeException(e);
-	}
   }
 
 

@@ -14,4 +14,6 @@ public interface UIhandler
 
   void setUserList(List<String> usernames);
 
+  void showError(Exception e);
+
 }

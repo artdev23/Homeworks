@@ -28,7 +28,6 @@ public class Session
   private final User user;
   private final DataInputStream inStream;
   private final DataOutputStream outStream;
-  private final Thread thread;
 
 
   public Session(SessionManager manager, Socket socket, User user)
@@ -39,7 +38,6 @@ public class Session
 	this.user = user;
 	inStream = new DataInputStream(socket.getInputStream());
 	outStream = new DataOutputStream(socket.getOutputStream());
-	thread = new Thread(() -> recieveMessages());
   }
 
 
@@ -69,7 +67,6 @@ public class Session
 	catch (SocketException e)
 	{
 	  out.println("Connection is lost");
-	  e.printStackTrace();
 	}
 	catch (IOException e)
 	{
@@ -110,7 +107,7 @@ public class Session
 
   public void start()
   {
-	thread.start();
+	manager.exec(() -> recieveMessages());
   }
 
 

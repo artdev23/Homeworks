@@ -83,13 +83,12 @@ public class MainWindow
 	pack();
 	setVisible(true);
 
-//	conn = new NetConnection(this);
-	conn = null;
+	conn = new NetConnection(this);
 
 	loginWin = new LoginWindow(this, conn);
 	settingsWin = new SettingsWindow(this, conn);
 
-//	login();
+	login();
   }
 
 
@@ -249,6 +248,15 @@ public class MainWindow
 				  userListModel.clear();
 				  usernames.forEach(o -> userListModel.addElement(o));
 				});
+  }
+
+
+  @Override
+  public void showError(Exception e)
+  {
+	String msg = e.getMessage();
+	String title = "Error";
+	showMessageDialog(this, msg, title, ERROR_MESSAGE);
   }
 
 
